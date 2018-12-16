@@ -1,0 +1,91 @@
+Pandas:
+###These powerful commands have many useful arguments
+pd.read_csv('filename', index_col='date', names=['column1','col2'] , header=None, na_values={'sunspot': ['-1']} , parse_dates=[[0,1,2]] or True, converters='')
+
+
+pd.DataFrame(data, index=, columns=, dtype=)
+pd.Series(data, index=)
+
+
+pd.to_datetime(date_list, format="%Y-%m-%d %H:%M:%S") 
+.dt.tz_localize() or .dt.tz_convert() 
+
+--------------------------------------------------------------------------------------------\
+
+df.plot()
+df.plot(x='sepal_length' , y='petal_length', kind='scatter')
+df[cols].plot(kind='box', subplots=True)
+df.plot(y='sepal_length', kind='hist',bins=30, range=(4,8), normed=True, cumulative=True, alpha=0.3)
+df['open'].plot(color='b', style='.-', legend=True)
+df.loc['2012-4', 'Close'].plot(style='k.-', title='S&P500')
+
+plt.yscale('log')											#for varying graph features use plt only
+plt.xlabel('asdf')
+plt.axis(('2001', '2002', 0, 100))
+
+--------------------------------------------------------------------------------------------/
+
+columns, shape, values, index
+describe(), info(), head() 
+value_counts() or unique()									#counts for each category in particular column
+iloc, loc
+
+--------------------------------------------------------------------------------------------\
+
+df.set_index('feature')
+ts2.reindex(ts1.index, method='ffill')
+ts2.reindex(ts1.index).interpolate(how='linear')
+daily_temp_climate = daily_climate.reset_index()['Temperature']					#Extract the Temperature column from daily_climate after resetting index
+
+sales = sales.set_index(['state', 'month'])							#MultiIndex
+stocks.loc[(slice(None), slice('2016-10-04', '2016-11-04')), :]					#use tuples to specify outermost and innermost indexes
+sales = sales.sort_index()	
+								#Sort the MultiIndex
+df.pivot(index="", columns="", values="")							#use pivot to make categorical variables to columns
+df.unstack(level='gender' or 1)									#for hierarchical indexes use unstack instead of pivot
+df.stack(level='gender')									#to convert pivoted to normal 
+df.swaplevel(0,1)										#to swap multiIndex
+
+visitors = pd.melt(df, id_vars=[''], value_vars=['f','m'], value_name='' , var_name=[''])	
+
+df.pivot_table(values='(kW)', index='YEAR', columns='Make', aggfunc=[np.mean,np.min], margins=True)
+
+--------------------------------------------------------------------------------------------/
+
+df1 = df['Temperature'].resample('6H'or'D').mean()						# Downsample to 6 hour data and aggregate by mean
+smoothed = unsmoothed.rolling(window=24).mean()
+
+df.drop('word', axis=1, inplace=False)
+df.drop_duplicates(keep='first')
+df.dropna(how='any')
+df.rename(columns={'...': '...'}, inplace=True)
+
+print(df.to_string()) or df.values            							#for printing whole dataframe
+
+df['Destination Airport'].str.contains('DAL')
+
+pd.to_numeric(df['dry'], errors='coerce')
+
+t_name[c_name][t_name[c_name] == "hello"] = 1	OR t_name.c_name[t_name.c_name == 'hello'] = 1		#vector subsetting
+df.loc[df['origin'] == 'US']
+
+df['date'] = df['date'].astype(str)
+grades = df['Grades'].astype('category', categories=['A', 'A+'], ordered=True)
+
+df[columns].apply(lambda x:x**2)								#can perform a function on columns using apply() and lambda
+df_dropped['Time'] = df_dropped['Time'].apply(lambda x:'{:0>4}'.format(x))
+df.index.map(str.lower)										#use map() for indexes or to transform values using dictionary
+
+df2.loc[:, df2.notnull().all()]									#columns with all non null values are selected
+df2.loc[:, df2.all()]										#.all() or .any() by default selects non_zeros
+
+
+pd.merge(staff_df, student_df, how='outer', left_index=True, right_index=True) 			#if basis of join is not by index use right_on and left_on
+												#how = 'outer'or'inner'or'left'or'right'
+
+for group, frame in df.groupby('STNAME'):
+    avg = np.average(frame['CENSUS2010POP'])
+    print('Counties in state ' + group + ' have an average population of ' + str(avg))
+
+df.groupby('STNAME').agg({'CENSUS2010POP': np.average})
+
